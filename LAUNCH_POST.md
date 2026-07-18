@@ -1,7 +1,7 @@
 # Diesel Sentry — Launch Posts (v2.1)
 
 Payment route: **direct online payment** (Ellis's own checkout — no Gumroad, no platform cut).
-Paste the checkout link wherever `[PAYMENT LINK]` appears before posting.
+Checkout link is filled in below — **test it end-to-end before posting**.
 
 Pricing: **$199 lifetime Founding seat** (200 seats) → **$299** after.
 
@@ -14,7 +14,7 @@ Pricing: **$199 lifetime Founding seat** (200 seats) → **$299** after.
 > $199 lifetime, $299 after the first 200 Founding seats.
 > Catch it while it's $200, not $3,400.
 >
-> [PAYMENT LINK]
+> https://app.trusspayments.com/pay/AmericasRestorations
 
 ---
 
@@ -34,7 +34,7 @@ What makes it different from a code reader:
 
 First 200 Founding seats are $199 lifetime — includes every future engine-specific update (enhanced PIDs like ICP/IPR/DPF soot are rolling out per engine as they're verified). $299 after that.
 
-[PAYMENT LINK]
+https://app.trusspayments.com/pay/AmericasRestorations
 
 Happy to answer technical questions in the thread.
 
@@ -50,7 +50,7 @@ It caught the difference between "old stored code" and "this is actively getting
 
 $199 lifetime for the first 200 seats, $299 after. Every dollar goes to development — I sell it direct, no middleman.
 
-[PAYMENT LINK]
+https://app.trusspayments.com/pay/AmericasRestorations
 
 ---
 
@@ -70,14 +70,13 @@ A $3,400 repair usually starts as a $200 part. Diesel Sentry's job is to catch i
 
 💰 First 200 Founding seats: **$199 lifetime** (then $299). Founders get every future update free.
 
-Order here 👉 [PAYMENT LINK]
+Order here 👉 https://app.trusspayments.com/pay/AmericasRestorations
 
 ---
 
 ## Posting checklist
 
-- [ ] Set up direct payment checkout page (Ellis)
-- [ ] Paste checkout link into all `[PAYMENT LINK]` slots
+- [ ] Test the Truss payment link end-to-end with a real card (Ellis)
 - [ ] Drive v2.1 ~5 sessions for the "Changed since your last drives" screenshot
 - [ ] Attach screenshot to forum + Reddit posts (it's the seat-seller)
 - [ ] Post: forums first, then Reddit, then FB groups
