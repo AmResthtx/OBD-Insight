@@ -156,3 +156,9 @@ cross-scan history (new/repeated/returning codes) and BotFather Affiliate
 Program support for referral-driven distribution. See
 [`telegram_bot/README.md`](telegram_bot/README.md) for setup and the
 market research behind it.
+
+## License
+
+Proprietary - all rights reserved. See [`LICENSE`](LICENSE). This is not
+open source software; no permission is granted to use, copy, or
+distribute it without written consent from the copyright holder.
