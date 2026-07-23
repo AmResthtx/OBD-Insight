@@ -146,3 +146,13 @@ V1 uses simple rules:
 * Critical: engine misfire, ABS/brake, airbag/SRS, transmission, or severe powertrain-related issues
 * Warning: body, driver seat, comfort, sensor, or other non-critical module codes
 * Informational: stored, historical, intermittent, previously cleared, or not-present codes
+
+## Telegram Bot
+
+`telegram_bot/` contains a Telegram front end that reuses this same
+parser/severity engine so users can paste a FORScan log straight into a
+chat and get instant triage, with a Stars-based premium tier for
+cross-scan history (new/repeated/returning codes) and BotFather Affiliate
+Program support for referral-driven distribution. See
+[`telegram_bot/README.md`](telegram_bot/README.md) for setup and the
+market research behind it.
