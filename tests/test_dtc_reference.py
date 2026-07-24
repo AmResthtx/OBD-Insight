@@ -26,6 +26,10 @@ class DtcReferenceTests(unittest.TestCase):
     def test_empty_code_returns_placeholder(self):
         self.assertEqual(explain(""), "No code provided.")
 
+    def test_7_3_power_stroke_code_returns_specific_explanation(self):
+        self.assertIn("Camshaft Position Sensor", explain("P0340"))
+        self.assertIn("Injection Control Pressure", explain("P1211"))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -117,6 +117,20 @@ Or pass your own FORScan Log text file:
 python src/main.py path/to/forscan_log.txt
 ```
 
+No truck handy? `tools/simulate_scan.py` generates a synthetic FORScan log
+for a 2000 Ford F-250 7.3L Power Stroke using real, verified DTCs, so you
+can test the parser, severity rules, and Telegram bot end-to-end without a
+vehicle connected:
+
+```bash
+python tools/simulate_scan.py > data/sim_run.txt
+python src/main.py data/sim_run.txt
+
+python tools/simulate_scan.py --list          # see the reference DTCs
+python tools/simulate_scan.py --codes P0340   # pick specific codes
+python tools/simulate_scan.py --clean         # a scan with no DTCs found
+```
+
 ## Example Output
 
 ```text
