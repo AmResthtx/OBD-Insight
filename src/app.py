@@ -6,6 +6,12 @@ from tkinter import filedialog, messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 
 from analysis import analyze_scan_text
+from forscan_export import (
+    ForscanExportError,
+    build_incoming_scan_path,
+    cleanup_incoming_scan,
+    export_open_forscan_log,
+)
 from history import save_scan_to_history
 from main import format_vehicle
 
@@ -41,7 +47,7 @@ class ObdInsightApp:
         ).grid(row=0, column=0, sticky="w")
         ttk.Label(
             header,
-            text="Copy the FORScan Log tab, paste it here, and analyze the scan.",
+            text="Analyze the open FORScan Log, or paste/open a saved log as a fallback.",
         ).grid(row=1, column=0, sticky="w", pady=(3, 0))
 
         actions = ttk.Frame(self.root, padding=(16, 4, 16, 8))
@@ -180,13 +186,27 @@ class ObdInsightApp:
         self.status_var.set(f"Opened {Path(selected_path).name}. Click Analyze Scan.")
 
     def analyze_scan(self):
+        exported_path = None
         scan_text = self.scan_text.get("1.0", "end-1c")
         if not scan_text.strip():
-            messagebox.showwarning(
-                "No scan text",
-                "Paste FORScan Log text or open a log file before analyzing.",
-            )
-            return
+            try:
+                exported_path, scan_text = self._export_scan_from_forscan()
+            except ForscanExportError as error:
+                self.status_var.set("FORScan export failed. Clipboard and file fallbacks remain available.")
+                messagebox.showwarning(
+                    "FORScan export failed",
+                    "OBD-Insight could not export the current FORScan Log tab.\n\n"
+                    f"{error}\n\n"
+                    "You can still use Paste from Clipboard or Open Log File.",
+                )
+                return
+            except (OSError, UnicodeError) as error:
+                self.status_var.set("FORScan export completed, but the saved file could not be read.")
+                messagebox.showerror(
+                    "Unable to read exported log",
+                    f"OBD-Insight exported the FORScan log, but could not read it.\n\n{error}",
+                )
+                return
 
         analysis = analyze_scan_text(scan_text)
         if not any((analysis["vehicle"], analysis["modules"], analysis["dtcs"])):
@@ -201,7 +221,9 @@ class ObdInsightApp:
             return
 
         self._show_analysis(analysis)
-        self._save_history(scan_text)
+        history_saved = self._save_history(scan_text)
+        if exported_path and history_saved:
+            cleanup_incoming_scan(exported_path)
 
     def clear_all(self):
         self.scan_text.delete("1.0", "end")
@@ -256,6 +278,17 @@ class ObdInsightApp:
         for item in self.results.get_children():
             self.results.delete(item)
 
+    def _export_scan_from_forscan(self):
+        export_path = build_incoming_scan_path()
+        self.status_var.set("Exporting the current FORScan Log tab...")
+        self.root.update_idletasks()
+
+        saved_path = export_open_forscan_log(export_path)
+        scan_text = read_log_file(saved_path)
+        self._set_scan_text(scan_text)
+        self.status_var.set(f"Exported {saved_path.name}. Analyzing scan...")
+        return saved_path, scan_text
+
     def _save_history(self, scan_text):
         try:
             save_result = save_scan_to_history(scan_text)
@@ -265,7 +298,7 @@ class ObdInsightApp:
                 "History not saved",
                 f"The scan results are available, but the history file could not be saved.\n\n{error}",
             )
-            return
+            return False
 
         if save_result.created:
             self.status_var.set(
@@ -273,6 +306,7 @@ class ObdInsightApp:
             )
         else:
             self.status_var.set("Scan analyzed. This scan is already in history.")
+        return True
 
 
 def read_log_file(path):
