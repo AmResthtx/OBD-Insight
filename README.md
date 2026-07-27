@@ -117,6 +117,20 @@ Or pass your own FORScan Log text file:
 python src/main.py path/to/forscan_log.txt
 ```
 
+No truck handy? `tools/simulate_scan.py` generates a synthetic FORScan log
+for a 2000 Ford F-250 7.3L Power Stroke using real, verified DTCs, so you
+can test the parser, severity rules, and Telegram bot end-to-end without a
+vehicle connected:
+
+```bash
+python tools/simulate_scan.py > data/sim_run.txt
+python src/main.py data/sim_run.txt
+
+python tools/simulate_scan.py --list          # see the reference DTCs
+python tools/simulate_scan.py --codes P0340   # pick specific codes
+python tools/simulate_scan.py --clean         # a scan with no DTCs found
+```
+
 ## Example Output
 
 ```text
@@ -146,3 +160,19 @@ V1 uses simple rules:
 * Critical: engine misfire, ABS/brake, airbag/SRS, transmission, or severe powertrain-related issues
 * Warning: body, driver seat, comfort, sensor, or other non-critical module codes
 * Informational: stored, historical, intermittent, previously cleared, or not-present codes
+
+## Telegram Bot
+
+`telegram_bot/` contains a Telegram front end that reuses this same
+parser/severity engine so users can paste a FORScan log straight into a
+chat and get instant triage, with a Stars-based premium tier for
+cross-scan history (new/repeated/returning codes) and BotFather Affiliate
+Program support for referral-driven distribution. See
+[`telegram_bot/README.md`](telegram_bot/README.md) for setup and the
+market research behind it.
+
+## License
+
+Proprietary - all rights reserved. See [`LICENSE`](LICENSE). This is not
+open source software; no permission is granted to use, copy, or
+distribute it without written consent from the copyright holder.
