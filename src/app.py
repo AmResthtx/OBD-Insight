@@ -6,6 +6,7 @@ from tkinter import filedialog, messagebox, ttk
 from tkinter.scrolledtext import ScrolledText
 
 from analysis import analyze_scan_text
+from history import save_scan_to_history
 from main import format_vehicle
 
 
@@ -200,6 +201,7 @@ class ObdInsightApp:
             return
 
         self._show_analysis(analysis)
+        self._save_history(scan_text)
 
     def clear_all(self):
         self.scan_text.delete("1.0", "end")
@@ -253,6 +255,24 @@ class ObdInsightApp:
     def _clear_results(self):
         for item in self.results.get_children():
             self.results.delete(item)
+
+    def _save_history(self, scan_text):
+        try:
+            save_result = save_scan_to_history(scan_text)
+        except (OSError, ValueError) as error:
+            self.status_var.set("Scan analyzed, but history could not be saved.")
+            messagebox.showwarning(
+                "History not saved",
+                f"The scan results are available, but the history file could not be saved.\n\n{error}",
+            )
+            return
+
+        if save_result.created:
+            self.status_var.set(
+                f"Scan analyzed and saved to {save_result.vehicle_folder.name}."
+            )
+        else:
+            self.status_var.set("Scan analyzed. This scan is already in history.")
 
 
 def read_log_file(path):

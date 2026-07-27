@@ -32,6 +32,7 @@ diagnosing the vehicle.
 - Detect multiple DTCs and match them to the correct modules
 - Show Critical, Warning, and Informational totals
 - Handle extra spaces, tabs, blank lines, timestamps, and collapsed log text
+- Save scans locally in a separate history folder for each vehicle
 
 FORScan's `(WARN)` label is ignored when assigning severity. OBD-Insight uses
 its own basic severity rules.
@@ -68,6 +69,12 @@ python src/app.py
 In FORScan, copy the Log tab. In OBD-Insight, click **Paste from Clipboard**,
 then click **Analyze Scan**. You can also choose **Open Log File** and select a
 saved FORScan text file.
+
+Successful scans are saved locally under:
+
+```text
+Documents\OBD-Insight Data\vehicles
+```
 
 The original terminal version remains available. Use the sample FORScan log:
 
