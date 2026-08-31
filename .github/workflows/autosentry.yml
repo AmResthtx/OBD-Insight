@@ -1,0 +1,62 @@
+name: AutoSentry APK
+
+on:
+  push:
+    branches: ["claude/vehicle-sentry-app-design-v3pcd1"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: autosentry
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install SDK packages
+        run: |
+          yes | sdkmanager --licenses >/dev/null 2>&1 || true
+          sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build debug APK
+        run: ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Stage APK
+        run: cp app/build/outputs/apk/debug/app-debug.apk AutoSentry-debug.apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: autosentry-debug-apk
+          path: autosentry/AutoSentry-debug.apk
+          retention-days: 30
+
+      - name: Publish APK to a public Release
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete autosentry-latest --yes --cleanup-tag || true
+          gh release create autosentry-latest AutoSentry-debug.apk \
+            --title "AutoSentry - latest debug build" \
+            --notes "Sideloadable debug APK, built from ${{ github.sha }}. On Android: tap the .apk to install (you'll need to allow 'Install unknown apps' for your browser/files app). If an older AutoSentry is already installed, uninstall it first - this build is signed with a different key, so Android won't install over it." \
+            --target ${{ github.sha }}
